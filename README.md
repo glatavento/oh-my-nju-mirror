@@ -2,6 +2,8 @@
 
 `oh-my-nju-mirror` is a script for automating using NJU mirrors when applicable.
 
+**Warning**: This script is not fully tested. Use it at your own risk.
+
 ## Usage
 
 The simple way:
