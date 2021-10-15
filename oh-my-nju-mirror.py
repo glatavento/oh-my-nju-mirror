@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
-#  This file is part of oh-my-tuna
-#  Copyright (c) 2018 oh-my-tuna's authors
+#  This file is part of oh-my-nju-mirror
+#  Copyright (c) 2018 oh-my-nju-mirror's authors
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -35,8 +35,10 @@ except ImportError:
     import ConfigParser as configparser
 
 
-mirror_root = "mirrors.tuna.tsinghua.edu.cn"
-host_name = "tuna.tsinghua.edu.cn"
+# mirror_root = "mirrors.tuna.tsinghua.edu.cn"
+mirror_root = "mirror.nju.edu.cn"
+# host_name = "tuna.tsinghua.edu.cn"
+host_name = "nju.edu.cn"
 always_yes = False
 verbose = False
 is_global = True
@@ -90,7 +92,7 @@ def ask_if_change(name, expected, command_read, command_set):
         else:
             return False
     else:
-        print('%s is already configured to TUNA mirrors' % name)
+        print('%s is already configured to NJU mirrors' % name)
         return True
 
 
@@ -223,7 +225,8 @@ class Base(object):
 
 
 class Pypi(Base):
-    mirror_url = 'https://pypi.%s/simple' % host_name
+    # mirror_url = 'https://pypi.%s/simple' % host_name
+    mirror_url = 'https://%s/pypi/web/simple' % mirror_root
 
     """
     Reference: https://pip.pypa.io/en/stable/user_guide/#configuration
@@ -332,7 +335,7 @@ class ArchLinux(Base):
         mirror_re = re.compile(
             r" *(# *)?Server *= *(http|https)://%s/archlinux/\$repo/os/\$arch\n"
             % mirror_root, re.M)
-        banner = '# Generated and managed by the awesome oh-my-tuna\n'
+        banner = '# Generated and managed by the awesome oh-my-nju-mirror\n'
         target = "Server = https://%s/archlinux/$repo/os/$arch\n\n" % mirror_root
 
         print(
@@ -370,7 +373,7 @@ class ArchLinux(Base):
     @staticmethod
     def down():
         print(
-            'This action will comment out TUNA mirrors from your pacman mirrorlist, if there is any.'
+            'This action will comment out NJU mirrors from your pacman mirrorlist, if there is any.'
         )
         if not user_prompt():
             return False
@@ -477,7 +480,7 @@ class CTAN(Base):
 
         return sh(
             '%s option repository' % base
-        ) == 'Default package repository (repository): https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet'
+        ) == 'Default package repository (repository): https://%s/CTAN/systems/texlive/tlnet' % mirror_root
 
     @staticmethod
     def up():
@@ -488,9 +491,9 @@ class CTAN(Base):
 
         return ask_if_change(
             'CTAN mirror',
-            'Default package repository (repository): https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet',
+            'Default package repository (repository): https://%s/CTAN/systems/texlive/tlnet' % mirror_root,
             '%s option repository' % base,
-            '%s option repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet' % base
+            '%s option repository https://%s/CTAN/systems/texlive/tlnet' % (base, mirror_root)
         )
 
 
@@ -592,24 +595,24 @@ class Debian(Base):
 
     @classmethod
     def up(cls):
-        print('This operation will move your current sources.list to sources.oh-my-tuna.bak.list,\n' + \
-              'and use TUNA apt source instead.')
+        print('This operation will move your current sources.list to sources.oh-my-nju-mirror.bak.list,\n' + \
+              'and use NJU Mirror apt source instead.')
         if not user_prompt():
             return False
         if os.path.isfile('/etc/apt/sources.list'):
-            sh('cp /etc/apt/sources.list /etc/apt/sources.oh-my-tuna.bak.list')
+            sh('cp /etc/apt/sources.list /etc/apt/sources.oh-my-nju-mirror.bak.list')
         with open('/etc/apt/sources.list', 'w') as sl:
             sl.write(cls.build_template(cls.build_mirrorspec()))
         return True
 
     @classmethod
     def down(cls):
-        print('This operation will copy sources.oh-my-tuna.bak.list to sources.list if there is one,\n' + \
+        print('This operation will copy sources.oh-my-nju-mirror.bak.list to sources.list if there is one,\n' + \
               'otherwise build a new sources.list with archive.ubuntu.com as its mirror root.')
         if not user_prompt():
             return False
-        if os.path.isfile('/etc/apt/sources.oh-my-tuna.bak.list'):
-            if sh('cp /etc/apt/sources.oh-my-tuna.bak.list /etc/apt/sources.list') is not None:
+        if os.path.isfile('/etc/apt/sources.oh-my-nju-mirror.bak.list'):
+            if sh('cp /etc/apt/sources.oh-my-nju-mirror.bak.list /etc/apt/sources.list') is not None:
                 return True
         with open('/etc/apt/sources.list', 'w') as sl:
             sl.write(cls.build_template(cls.default_sources))
@@ -694,6 +697,7 @@ class CentOS(Base):
 
 
 class AOSCOS(Base):
+    # I have never used AOSC OS, so leaved this with tuna.
     @staticmethod
     def name():
         return 'AOSC OS'
@@ -742,7 +746,7 @@ MODULES = [ArchLinux, Homebrew, CTAN, Pypi, Anaconda, Debian, Ubuntu, CentOS, AO
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Use TUNA mirrors everywhere when applicable')
+        description='Use NJU mirrors everywhere when applicable')
     parser.add_argument(
         'subcommand',
         nargs='?',
@@ -813,4 +817,6 @@ def main():
 
 
 if __name__ == "__main__":
+    print("Warning: This script is a simple, untested search-replace of oh-my-tuna.py.")
+    print("         Use it at your own risk.")
     main()
