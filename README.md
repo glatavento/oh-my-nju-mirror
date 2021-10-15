@@ -1,4 +1,4 @@
-# <del>oh-my-tuna</del> oh-my-nju-mirror
+# ~~oh-my-tuna~~ oh-my-nju-mirror
 
 `oh-my-nju-mirror` is a script for automating using NJU mirrors when applicable.
 
