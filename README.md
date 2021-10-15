@@ -1,4 +1,4 @@
-# oh-my-nju-mirror
+# <del>oh-my-tuna</del> oh-my-nju-mirror
 
 `oh-my-nju-mirror` is a script for automating using NJU mirrors when applicable.
 
@@ -7,7 +7,7 @@
 The simple way:
 
 ```bash
-wget https://tuna.moe/oh-my-nju-mirror/oh-my-nju-mirror.py
+wget https://raw.fastgit.org/glatavento/oh-my-tuna/master/oh-my-nju-mirror.py
 python oh-my-nju-mirror.py
 ```
 
